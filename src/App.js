@@ -1,9 +1,25 @@
-import { Component } from 'react';
+//import { Component } from 'react';
 import ContactForm from './components/ContactForm';
 import ContactList from './components/ContactList/';
 import Filter from './components/Filter';
 
-class App extends Component {
+const App = () => (
+  <>
+    <h1>Phonebook</h1>
+
+    <ContactForm />
+
+    <h2>Contacts</h2>
+
+    <Filter />
+
+    <ContactList />
+  </>
+);
+
+export default App;
+
+/*class App extends Component {
   state = {
     contacts: [
       { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
@@ -45,23 +61,20 @@ class App extends Component {
 
   render() {
     const { filter } = this.state;
-    const visibleContacts = this.getVisibleContacts();
+  const visibleContacts = this.getVisibleContacts();
 
     return (
       <>
         <h1>Phonebook</h1>
-        <ContactForm
-          onAdd={this.handleContact}
-          onCheckUnique={this.handleCheckUnique}
-        />
+        <ContactForm onAdd={this.handleContact} onCheckUnique={this.handleCheckUnique}/>
+        
         <h2>Contacts</h2>
-        <Filter filter={filter} onChange={this.handleFilterChange} />
-        <ContactList
-          contacts={visibleContacts}
-          onDelete={this.handleDeleteContact}
-        />
+        <Filter filter={filter} onChange={this.handleFilterChange}/>
+        
+        <ContactList  contacts={visibleContacts} onDelete={this.handleDeleteContact} />
+       
       </>
     );
   }
 }
-export default App;
+export default App;*/

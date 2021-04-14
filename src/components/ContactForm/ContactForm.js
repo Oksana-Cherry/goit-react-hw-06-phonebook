@@ -1,8 +1,8 @@
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import styles from './ContactForm.module.css';
-import { Component } from 'react';
 
-import { v4 as uuid } from 'uuid';
+import { connect } from 'react-redux';
+import contactActions from '../../redux/contacts/contact-actions';
 
 class ContactForm extends Component {
   state = {
@@ -16,21 +16,50 @@ class ContactForm extends Component {
       [name]: value,
     });
   };
-
-  handleSubmit = e => {
-    e.preventDefault();
-
+  handleSubmit = event => {
     const { name, number } = this.state;
-    const { onAdd } = this.props;
+    const { contacts, onSubmit } = this.props;
 
-    const isValidatedForm = this.validateForm();
+    event.preventDefault();
 
-    if (!isValidatedForm) return;
-    onAdd({ id: uuid(), name, number });
-    this.resetForm();
+    const isExistContact = contacts.find(contact => contact.name === name);
+
+    if (isExistContact !== undefined) {
+      alert(`${name}is already in the Phonebook`);
+      return;
+    }
+
+    onSubmit(name, number);
+    if (!name || !number) {
+      alert(`Some field is empty`);
+
+      return false;
+    }
+    this.setState({ name: '', number: '' });
   };
+  //handleSubmit = e => {
+  //  e.preventDefault();
 
-  validateForm = () => {
+  // const { name, number } = this.state;
+  //const { onAdd } = this.props;
+
+  //const isValidatedForm = this.validateForm();
+
+  //if (!isValidatedForm) return;
+  //onAdd({ id: uuid(), name, number });
+  //this.resetForm();
+  //};
+  // handleCheckUnique = name => {
+  // проверка
+  // const { contacts } = this.state;
+  //console.log(contacts);
+  // const isExistContact = !!contacts.find(contact => contact.name === name);
+
+  //  isExistContact && alert(`${name}is already in the Phonebook`);
+  //  return !isExistContact;
+  //};
+
+  /*validateForm = () => {
     const { name, number } = this.state;
     const { onCheckUnique } = this.props;
     if (!name || !number) {
@@ -39,7 +68,7 @@ class ContactForm extends Component {
       return false;
     }
     return onCheckUnique(name);
-  };
+  };*/
 
   resetForm = () => this.setState(this.state);
 
@@ -76,8 +105,12 @@ class ContactForm extends Component {
     );
   }
 }
-ContactForm.propTypes = {
-  onAdd: PropTypes.func.isRequired,
-  onCheckUnique: PropTypes.func.isRequired,
-};
-export default ContactForm;
+const mapStateToProps = ({ contacts }) => ({
+  contacts: contacts.contacts,
+});
+
+const mapDispatchToProps = dispatch => ({
+  onSubmit: (name, number) => dispatch(contactActions.addContact(name, number)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
